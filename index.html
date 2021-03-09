@@ -121,8 +121,8 @@
     var cameraDirection = new THREE.Vector3(0, 0, -1);
 
     var SEPARATION = 50,
-      AMOUNTX = 70,
-      AMOUNTY = 70;
+      AMOUNTX = 50,
+      AMOUNTY = 50;
     var particles,
       particle,
       count = 0;
@@ -151,16 +151,16 @@
         45, // fov 75 degree
         window.innerWidth / window.innerHeight, //aspect (width/height ratio)
         0.001, //near
-        10000 // far
+        1000 // far
       );
 
       particles = new Array();
-      var geometry = new THREE.SphereBufferGeometry(0.75, 5, 5);
+      var geometry = new THREE.SphereBufferGeometry(0.8, 10, 10);
       var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
       var i = 0;
       for (var ix = 0; ix < AMOUNTX; ix++) {
         for (var iy = 0; iy < AMOUNTY; iy++) {
-          if (ix <= 40 && ix >= 30 && iy <= 40 && iy >= 30) {
+          if (ix <= 30 && ix >= 20 && iy <= 30 && iy >= 20) {
             continue;
           }
           //创建球体实例 并且摆放位置
@@ -679,16 +679,16 @@
       var i = 0;
       for (var ix = 0; ix < AMOUNTX; ix++) {
         for (var iy = 0; iy < AMOUNTY; iy++) {
-          if (ix <= 40 && ix >= 30 && iy <= 40 && iy >= 30) {
+          if (ix <= 30 && ix >= 20 && iy <= 30 && iy >= 20) {
             continue;
           }
           var x = 0;
           var y = 0;
-          if (ix <= 30) x = -275;
-          else if (ix >= 40) x = 275;
+          if (ix <= 20) x = -275;
+          else if (ix >= 30) x = 275;
           else x = particle.position.x;
-          if (iy <= 30) z = -275;
-          else if (iy >= 40) z = 275;
+          if (iy <= 20) z = -275;
+          else if (iy >= 30) z = 275;
           else z = particle.position.z;
           particle = particles[i++];
           particle.position.y =
@@ -700,7 +700,7 @@
               )) /
               500 +
             2.5;
-          //particle.scale.x = particle.scale.y = ( Math.sin( ( ix + count ) * 0.3 )) + ( Math.sin( ( iy + count ) * 0.3 ));
+          particle.scale.x = particle.scale.y = particle.scale.z = ( Math.sin( ( ix + count ) * 0.3 )) + ( Math.sin( ( iy + count ) * 0.3 ));
         }
       }
       count += 0.03;
