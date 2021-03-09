@@ -694,25 +694,27 @@
 
           var sin_ix_3 = Math.sin((ix + count) * 0.25);
           var sin_iy_5 = Math.sin((iy + count) * 0.5);
-          var sin_ix_1 = Math.sin((ix + count*0.5) * 0.1);
-          var sin_iy_2 = Math.sin((iy + count*0.5) * 0.2);
+          var sin_ix_1 = Math.sin((ix + count * 0.5) * 0.1);
+          var sin_iy_2 = Math.sin((iy + count * 0.5) * 0.2);
           var dis = Math.sqrt(
             Math.pow(x - particle.position.x, 2) +
               Math.pow(z - particle.position.z, 2)
           );
 
-          particle.position.y =
-            ((sin_ix_3 + sin_iy_5) * dis) / 50 + 2.5;
+          particle.position.y = ((sin_ix_3 + sin_iy_5) * dis) / 50 + 2.5;
 
           particle.position.x += ((sin_ix_1 + sin_iy_2) * dis) / 20000;
 
           particle.position.z += ((sin_ix_1 + sin_iy_2) * dis) / 20000;
 
-          particle.scale.x = particle.scale.y = particle.scale.z =Math.max((sin_ix_3 + 1) / 2 + (sin_iy_5 + 1) / 2,0.5);
+          particle.scale.x = particle.scale.y = particle.scale.z = Math.max(
+            (sin_ix_3 + 1) / 2 + (sin_iy_5 + 1) / 2,
+            0.5
+          );
         }
       }
       count += 0.025;
-      console.log(count)
+      console.log(count);
 
       if (jump || jumping) {
         if (uping) {
