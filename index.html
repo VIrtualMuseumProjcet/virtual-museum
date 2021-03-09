@@ -150,12 +150,12 @@
       camera = new THREE.PerspectiveCamera(
         45, // fov 75 degree
         window.innerWidth / window.innerHeight, //aspect (width/height ratio)
-        0.001, //near
+        0.1, //near
         1000 // far
       );
 
       particles = new Array();
-      var geometry = new THREE.SphereBufferGeometry(0.8, 10, 10);
+      var geometry = new THREE.SphereBufferGeometry(0.5, 10, 8);
       var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
       var i = 0;
       for (var ix = 0; ix < AMOUNTX; ix++) {
@@ -691,19 +691,28 @@
           else if (iy >= 30) z = 275;
           else z = particle.position.z;
           particle = particles[i++];
+
+          var sin_ix_3 = Math.sin((ix + count) * 0.25);
+          var sin_iy_5 = Math.sin((iy + count) * 0.5);
+          var sin_ix_1 = Math.sin((ix + count) * 0.1);
+          var sin_iy_2 = Math.sin((iy + count) * 0.2);
+          var dis = Math.sqrt(
+            Math.pow(x - particle.position.x, 2) +
+              Math.pow(z - particle.position.z, 2)
+          );
+
           particle.position.y =
-            ((Math.sin((ix + count) * 0.3) * 10 +
-              Math.sin((iy + count) * 0.5) * 10) *
-              Math.sqrt(
-                Math.pow(x - particle.position.x, 2) +
-                  Math.pow(z - particle.position.z, 2)
-              )) /
-              500 +
-            2.5;
-          particle.scale.x = particle.scale.y = particle.scale.z = ( Math.sin( ( ix + count ) * 0.3 )) + ( Math.sin( ( iy + count ) * 0.3 ));
+            ((sin_ix_3 + sin_iy_5) * dis) / 50 + 2.5;
+
+          particle.position.x += ((sin_ix_1 + sin_iy_2) * dis) / 20000;
+
+          particle.position.z += ((sin_ix_1 + sin_iy_2) * dis) / 20000;
+
+          particle.scale.x = particle.scale.y = particle.scale.z =
+            (sin_ix_3 + 1) / 2 + (sin_iy_5 + 1) / 2;
         }
       }
-      count += 0.03;
+      count += 0.025;
 
       if (jump || jumping) {
         if (uping) {
