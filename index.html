@@ -94,7 +94,9 @@
   </body>
 
   <script src="./lib/three.js"></script>
+  <script src="./lib/jquery.js"></script>
   <script src="https://mamboleoo.be/learnThree/demos/OBJLoader.js"></script>
+  <script src="/lib/PointerLockControls.js"></script>
 
   <script>
     var scene;
@@ -656,8 +658,8 @@
       }
     }
 
-    var maxSpeed = 0.1;
-    var acc = 0.3;
+    var maxSpeed = 0.12;
+    var acc = 0.5;
     var currentSpeedForward = 0;
     var currentSpeedRight = 0;
     var Forward = true;
@@ -714,7 +716,6 @@
         }
       }
       count += 0.025;
-      console.log(count);
 
       if (jump || jumping) {
         if (uping) {
@@ -728,7 +729,7 @@
         } else {
           jump = false;
           cameraPosition.y = Math.max(cameraPosition.y - jumpSpeed, 15);
-          jumpSpeed = Math.min(jumpSpeed + delta * acc * 1.25, 0.15);
+          jumpSpeed = Math.min(jumpSpeed + delta * acc * 1.25, 0.2);
           if (cameraPosition.y == 15) {
             uping = true;
             jumping = false;
