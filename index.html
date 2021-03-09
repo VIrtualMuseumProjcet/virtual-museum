@@ -105,7 +105,7 @@
     var moveBackward = false;
     var moveLeft = false;
     var moveRight = false;
-    var jump=false;
+    var jump = false;
 
     var startTime = performance.now();
     var direction = new THREE.Vector3();
@@ -116,13 +116,21 @@
     var controlsEnabled = true;
 
     var torusKnotMesh;
-    var cameraPosition = new THREE.Vector3(0, 15, 50);
+    var cameraPosition = new THREE.Vector3(0, 15, 200);
     var cameraDirection = new THREE.Vector3(0, 0, -1);
+
+    var SEPARATION = 50,
+      AMOUNTX = 70,
+      AMOUNTY = 70;
+    var particles,
+      particle,
+      count = 0;
+
     function init() {
       scene = new THREE.Scene();
       // var backgroundLoader = new THREE.CubeTextureLoader();
       // var bgTexure = backgroundLoader.load("assets/night.jpg");
-      scene.background = new THREE.Color(0xaffffff);
+      scene.background = new THREE.Color(0xa000000);
       scene.fog = new THREE.Fog(0xa0a0a0, 100, 300);
       // var reflectionCube  = new THREE.CubeTextureLoader()
       //     .setPath('./assets/')
@@ -142,8 +150,25 @@
         45, // fov 75 degree
         window.innerWidth / window.innerHeight, //aspect (width/height ratio)
         0.001, //near
-        500 // far
+        10000 // far
       );
+
+      particles = new Array();
+      var geometry = new THREE.SphereBufferGeometry(0.75, 5, 5);
+      var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      var i = 0;
+      for (var ix = 0; ix < AMOUNTX; ix++) {
+        for (var iy = 0; iy < AMOUNTY; iy++) {
+          if (ix <= 40 && ix >= 30 && iy <= 40 && iy >= 30) {
+            continue;
+          }
+          //创建球体实例 并且摆放位置
+          particle = particles[i++] = new THREE.Mesh(geometry, material);
+          particle.position.x = ix * SEPARATION - (AMOUNTX * SEPARATION) / 2;
+          particle.position.z = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2;
+          scene.add(particle);
+        }
+      }
 
       camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
       camera.lookAt(cameraDirection.x, cameraDirection.y, cameraDirection.z);
@@ -171,7 +196,7 @@
           case 39:
             moveRight = true;
             break;
-          
+
           case 32:
             jump = true;
             break;
@@ -205,10 +230,10 @@
       document.addEventListener("keydown", onKeyDown, false);
       document.addEventListener("keyup", onKeyUp, false);
 
-      var geometryGround = new THREE.PlaneBufferGeometry(100, 500);
+      var geometryGround = new THREE.PlaneBufferGeometry(575, 575);
       // var geometryPlane = new THREE.PlaneGeometry(60,50);
       geometryGround.rotateX(Math.PI / 2);
-      geometryGround.translate(0, 0, -150);
+      geometryGround.translate(0, 0, 0);
       var texture = THREE.ImageUtils.loadTexture("assets/stone.png");
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
@@ -595,17 +620,12 @@
 
     // Mouse Move
     document.addEventListener("mousemove", mouseMove, false);
-    // Initiate the position of Mouse
-    document.addEventListener("mouseenter", mouseInitiation, false);
     var delta = 0;
     var mouseP = { x: 0, y: 0 };
     var up = 0;
     var down = 0;
     var left = 0;
     var right = 0;
-    function mouseInitiation(e) {
-      mouseP = getMousePosition(e);
-    }
     function getMousePosition(e) {
       var x = e.clientX;
       var y = e.clientY;
@@ -647,30 +667,62 @@
     angleZX = 0;
     angleZY = 0;
 
-    var uping=true;
-    var jumpSpeed=0.12;
-    var jumping=false;
+    var uping = true;
+    var jumpSpeed = 0.2;
+    var jumping = false;
 
     function animate() {
       var delta = clock.getDelta();
 
-      if(jump||jumping){
-        if(uping){
-          jumping=true;
-          jump=false;
-          cameraPosition.y+=jumpSpeed;
-          jumpSpeed=Math.max(0,jumpSpeed-delta*acc);
-          if(jumpSpeed==0){uping=false;}
-          console.log(jumpSpeed)
-        }else{
-          jump=false;
-          cameraPosition.y=Math.max(cameraPosition.y-jumpSpeed,15);
-          jumpSpeed=Math.min(jumpSpeed+delta*acc,0.12);
-          if(cameraPosition.y==15){uping=true;jumping=false;}
+      //Ball Maving
+      var i = 0;
+      for (var ix = 0; ix < AMOUNTX; ix++) {
+        for (var iy = 0; iy < AMOUNTY; iy++) {
+          if (ix <= 40 && ix >= 30 && iy <= 40 && iy >= 30) {
+            continue;
+          }
+          var x = 0;
+          var y = 0;
+          if (ix <= 30) x = -275;
+          else if (ix >= 40) x = 275;
+          else x = particle.position.x;
+          if (iy <= 30) z = -275;
+          else if (iy >= 40) z = 275;
+          else z = particle.position.z;
+          particle = particles[i++];
+          particle.position.y =
+            ((Math.sin((ix + count) * 0.3) * 10 +
+              Math.sin((iy + count) * 0.5) * 10) *
+              Math.sqrt(
+                Math.pow(x - particle.position.x, 2) +
+                  Math.pow(z - particle.position.z, 2)
+              )) /
+              500 +
+            2;
+          //particle.scale.x = particle.scale.y = ( Math.sin( ( ix + count ) * 0.3 )) + ( Math.sin( ( iy + count ) * 0.3 ));
         }
       }
-      console.log(jump)
-      console.log(jumping)
+      count += 0.03;
+
+      if (jump || jumping) {
+        if (uping) {
+          jumping = true;
+          jump = false;
+          cameraPosition.y += jumpSpeed;
+          jumpSpeed = Math.max(0, jumpSpeed - delta * acc * 1.25);
+          if (jumpSpeed == 0) {
+            uping = false;
+          }
+        } else {
+          jump = false;
+          cameraPosition.y = Math.max(cameraPosition.y - jumpSpeed, 15);
+          jumpSpeed = Math.min(jumpSpeed + delta * acc * 1.25, 0.15);
+          if (cameraPosition.y == 15) {
+            uping = true;
+            jumping = false;
+          }
+        }
+      }
 
       if (moveForward && !moveBackward) {
         if (!Forward && currentSpeedForward != 0) {
@@ -731,7 +783,7 @@
           Right = false;
         }
       }
-      if ((!moveBackward && !moveForward)||(moveBackward && moveForward)) {
+      if ((!moveBackward && !moveForward) || (moveBackward && moveForward)) {
         if (Forward) {
           cameraPosition.z += cameraDirection.z * currentSpeedForward;
           cameraPosition.x += cameraDirection.x * currentSpeedForward;
@@ -742,7 +794,7 @@
           currentSpeedForward = Math.max(0, currentSpeedForward - delta * acc);
         }
       }
-      if ((!moveRight && !moveLeft)||(moveRight && moveLeft)) {
+      if ((!moveRight && !moveLeft) || (moveRight && moveLeft)) {
         if (Right) {
           cameraPosition.x -= cameraDirection.z * currentSpeedRight;
           cameraPosition.z += cameraDirection.x * currentSpeedRight;
@@ -811,6 +863,5 @@
     function hideSec() {
       document.getElementById("secondBlocker").style.display = "none";
     }
-    //test!
   </script>
 </html>
