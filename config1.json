@@ -35,7 +35,7 @@
             "mtlUrl":"./obj/LibertStatue",
             "objScale":0.02,
             "position":{
-                "x":20,
+                "x":50,
                 "y":20,
                 "z":20
             },
@@ -47,7 +47,7 @@
             "mtlUrl":"./obj/13927_Charging_Bull_Statue_of_Wall_Street_v1_L1",
             "objScale":0.1,
             "position":{
-                "x":0,
+                "x":50,
                 "y":20,
                 "z":20
             },
@@ -59,7 +59,7 @@
             "mtlUrl":"./obj/12330_Statue_v1_L2",
             "objScale":0.1,
             "position":{
-                "x":20,
+                "x":10,
                 "y":20,
                 "z":20
             },
