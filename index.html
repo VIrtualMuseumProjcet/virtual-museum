@@ -21,7 +21,7 @@
 
     <!-- <input type="file"> -->
     <p id="drag-and-drop">
-      <img src="./upload.png" alt="/" style="background-color:white;margin: auto;" height="100px">
+      <img src="./assets/upload.png" alt="/" style="background-color:white;margin: auto;" height="100px">
       <br>
       Drag and Drop a JSON file
     </p>
@@ -57,8 +57,10 @@
 <script type="module">
   import { init } from './main.js';
   import { animate } from './main.js';
-var jsonFilePath;
-var container;
+
+  var jsonFilePath;
+  var container;
+
   container = document.getElementById('webgl-container');
   container.addEventListener("dragover", function (e) { e.preventDefault(); }, true);
   container.addEventListener("drop", function (e) {
@@ -92,9 +94,6 @@ var container;
 </script>
 <script type="text/javascript">
 
-
-
-  
   function hideMe() {
     // console.log(document.getElementsByClassName("content"));
     document.getElementById("content").style.display = "none";
